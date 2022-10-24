@@ -40,31 +40,48 @@ class ViewController: UIViewController {
     @IBAction func enterWord(_ sender: UIButton) {
         let firstNum = inputLabelIndex - 4
         var guessWord = ""
-        //答案單字變array
+        //答案單字變questionWords array
         for character in newQuestion {
             questionWords.append(String(character))
         }
         print(newQuestion)
-        //猜的單字變字串 & array
+        //猜的單字變guessWord字串 & guessWords array
         for i in firstNum ... inputLabelIndex {
             let character = guessLabels[i].text!
             guessWords.append(character)
             guessWord += character
+            flipCard(view: guessLabels[i])
+            //字母分別對答案
             if questionWords[i] == guessWords[i] {
+                //背景色塊顏色轉換
                 guessLabels[i].backgroundColor = CheckResult.correct.color
                 emojiResults.append(CheckResult.correct.emoji)
+                //鍵盤背景顏色轉換
+                for j in 0..<keyBoardBtns.count {
+                    let keyboardCharacter = keyBoardBtns[j].configuration?.title!
+                    if keyboardCharacter == questionWords[i] {
+                        keyBoardBtns[j].configuration?.baseBackgroundColor = CheckResult.correct.color
+                    }
+                }
             } else if newQuestion.contains(character) {
                 guessLabels[i].backgroundColor = CheckResult.wrongPlace.color
                 emojiResults.append(CheckResult.wrongPlace.emoji)
             } else {
                 guessLabels[i].backgroundColor = CheckResult.wrong.color
                 emojiResults.append(CheckResult.wrong.emoji)
+                for j in 0..<keyBoardBtns.count {
+                    let keyboardCharacter = keyBoardBtns[j].configuration?.title!
+                    if keyboardCharacter == questionWords[i] {
+                        keyBoardBtns[j].configuration?.baseBackgroundColor = CheckResult.wrong.color
+                    }
+                }
             }
         }
         keyboardEnable(bool: true)
         print(emojiResults)
         if inputLabelIndex == 39 {
             //結國view
+            print(resultEmoji(emojiArray: emojiResults))
         }
     }
     @IBAction func deleteLast(_ sender: UIButton) {
@@ -97,6 +114,21 @@ class ViewController: UIViewController {
             guessLabels[i].text = ""
         }
         keyboardEnable(bool: true)
+    }
+    
+    func resultEmoji(emojiArray: Array<String>) -> String {
+        var emojiString = ""
+        for j in 1...8 {
+            for i in 1...5 {
+                emojiString += emojiArray[j*5-(6-i)]
+            }
+            emojiString += "\n"
+        }
+        return emojiString
+    }
+    
+    func flipCard(view: UIView) {
+        UIView.transition(with: view, duration: 0.6, options: .transitionFlipFromTop, animations: nil, completion: nil)
     }
 }
 

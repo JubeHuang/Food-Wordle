@@ -44,7 +44,6 @@
 		8D9A48A42904F21200E68463 = {
 			isa = PBXGroup;
 			children = (
-				8D9A48C629058FD500E68463 /* CheckResult.swift */,
 				8D9A48AF2904F21200E68463 /* Food Wordle */,
 				8D9A48AE2904F21200E68463 /* Products */,
 			);
@@ -61,6 +60,7 @@
 		8D9A48AF2904F21200E68463 /* Food Wordle */ = {
 			isa = PBXGroup;
 			children = (
+				8D9A48C629058FD500E68463 /* CheckResult.swift */,
 				8D9A48B02904F21200E68463 /* AppDelegate.swift */,
 				8D9A48B22904F21200E68463 /* SceneDelegate.swift */,
 				8D9A48B42904F21200E68463 /* ViewController.swift */,

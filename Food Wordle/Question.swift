@@ -53,7 +53,13 @@ struct Question {
                  "torte",
                  "wafer",
                  "water",
-                 "wheat"
+                 "wheat",
+                 "dairy",
+                 "drink",
+                 "gravy",
+                 "juice",
+                 "maize",
+                 "prune"
     ]
     
     
