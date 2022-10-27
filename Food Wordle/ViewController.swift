@@ -131,14 +131,46 @@ class ViewController: UIViewController {
     //        UIView.transition(with: view, duration: 0.6, options: .transitionFlipFromTop, animations: nil, completion: nil)
     //    }
     
-    func flipCard(views: Array<UIView>, num: Int) {
+    func checkAnswer(num: Int) {
         var guessWord = ""
-        //一張一張接續翻牌
-        for i in num ... num+4 {
-            let delayTime = DispatchTimeInterval.nanoseconds(i % 5 * 100000000)
-            DispatchQueue.main.asyncAfter(deadline: .now()+delayTime){
-                // animation
-                UIView.transition(with: views[i], duration: 0.6, options: .transitionFlipFromTop, animations: nil, completion: nil)
+        for n in num ... num+4 {
+            let character = guessLabels[n].text!
+            guessWords.append(character)
+            guessWord += character
+            //字母分別對答案
+            print(questionWords[n], guessWords[n])
+            if questionWords[n] == guessWords[n] {
+                emojiResults.append(CheckResult.correct.emoji)
+                //鍵盤背景顏色轉換
+                for j in 0..<keyBoardBtns.count {
+                    let keyboardCharacter = keyBoardBtns[j].configuration?.title!
+                    if keyboardCharacter == questionWords[n] {
+                        keyBoardBtns[j].configuration?.baseBackgroundColor = CheckResult.correct.color
+                    }
+                }
+            } else if newQuestion.contains(character) {
+                emojiResults.append(CheckResult.wrongPlace.emoji)
+            } else {
+                emojiResults.append(CheckResult.wrong.emoji)
+                for j in 0..<keyBoardBtns.count {
+                    let keyboardCharacter = keyBoardBtns[j].configuration?.title!
+                    if keyboardCharacter == guessWords[n] {
+                        keyBoardBtns[j].configuration?.baseBackgroundColor = CheckResult.wrong.color
+                    }
+                }
+            }
+        }
+    }
+    
+    func flipCard(views: Array<UIView>, num: Int) {
+            var guessWord = ""
+            //一張一張接續翻牌
+            for i in num ... num+4 {
+                let delayTime = DispatchTimeInterval.nanoseconds(i % 5 * 100000000)
+                DispatchQueue.main.asyncAfter(deadline: .now()+delayTime){
+                    // animation
+                    UIView.transition(with: views[i], duration: 0.6, options: .transitionFlipFromTop, animations: nil, completion: nil)
+                }
                 //猜的單字變guessWord字串 & guessWords array
                 let character = self.guessLabels[i].text!
                 self.guessWords.append(character)
@@ -148,7 +180,6 @@ class ViewController: UIViewController {
                     //背景色塊顏色轉換
                     self.guessLabels[i].backgroundColor = CheckResult.correct.color
                     self.emojiResults.append(CheckResult.correct.emoji)
-                    print("correct", self.emojiResults)
                     //鍵盤背景顏色轉換
                     for j in 0..<self.keyBoardBtns.count {
                         let keyboardCharacter = self.keyBoardBtns[j].configuration?.title!
@@ -159,7 +190,6 @@ class ViewController: UIViewController {
                 } else if self.newQuestion.contains(character) {
                     self.guessLabels[i].backgroundColor = CheckResult.wrongPlace.color
                     self.emojiResults.append(CheckResult.wrongPlace.emoji)
-                    print("wronfPlace", self.emojiResults)
                 } else {
                     self.guessLabels[i].backgroundColor = CheckResult.wrong.color
                     self.emojiResults.append(CheckResult.wrong.emoji)
@@ -169,11 +199,9 @@ class ViewController: UIViewController {
                             self.keyBoardBtns[j].configuration?.baseBackgroundColor = CheckResult.wrong.color
                         }
                     }
-                    print("wrong", self.emojiResults)
                 }
             }
-        }
-        print("end", emojiResults)
+            print(emojiResults)
     }
     
 }
