@@ -139,38 +139,41 @@ class ViewController: UIViewController {
             DispatchQueue.main.asyncAfter(deadline: .now()+delayTime){
                 // animation
                 UIView.transition(with: views[i], duration: 0.6, options: .transitionFlipFromTop, animations: nil, completion: nil)
-            }
-            //猜的單字變guessWord字串 & guessWords array
-            let character = self.guessLabels[i].text!
-            self.guessWords.append(character)
-            guessWord += character
-            //字母分別對答案
-            if self.questionWords[i] == self.guessWords[i] {
-                //背景色塊顏色轉換
-                self.guessLabels[i].backgroundColor = CheckResult.correct.color
-                self.emojiResults.append(CheckResult.correct.emoji)
-                //鍵盤背景顏色轉換
-                for j in 0..<self.keyBoardBtns.count {
-                    let keyboardCharacter = self.keyBoardBtns[j].configuration?.title!
-                    if keyboardCharacter == self.questionWords[i] {
-                        self.keyBoardBtns[j].configuration?.baseBackgroundColor = CheckResult.correct.color
+                //猜的單字變guessWord字串 & guessWords array
+                let character = self.guessLabels[i].text!
+                self.guessWords.append(character)
+                guessWord += character
+                //字母分別對答案
+                if self.questionWords[i] == self.guessWords[i] {
+                    //背景色塊顏色轉換
+                    self.guessLabels[i].backgroundColor = CheckResult.correct.color
+                    self.emojiResults.append(CheckResult.correct.emoji)
+                    print("correct", self.emojiResults)
+                    //鍵盤背景顏色轉換
+                    for j in 0..<self.keyBoardBtns.count {
+                        let keyboardCharacter = self.keyBoardBtns[j].configuration?.title!
+                        if keyboardCharacter == self.questionWords[i] {
+                            self.keyBoardBtns[j].configuration?.baseBackgroundColor = CheckResult.correct.color
+                        }
                     }
-                }
-            } else if self.newQuestion.contains(character) {
-                self.guessLabels[i].backgroundColor = CheckResult.wrongPlace.color
-                self.emojiResults.append(CheckResult.wrongPlace.emoji)
-            } else {
-                self.guessLabels[i].backgroundColor = CheckResult.wrong.color
-                self.emojiResults.append(CheckResult.wrong.emoji)
-                for j in 0..<self.keyBoardBtns.count {
-                    let keyboardCharacter = self.keyBoardBtns[j].configuration?.title!
-                    if keyboardCharacter == self.guessWords[i] {
-                        self.keyBoardBtns[j].configuration?.baseBackgroundColor = CheckResult.wrong.color
+                } else if self.newQuestion.contains(character) {
+                    self.guessLabels[i].backgroundColor = CheckResult.wrongPlace.color
+                    self.emojiResults.append(CheckResult.wrongPlace.emoji)
+                    print("wronfPlace", self.emojiResults)
+                } else {
+                    self.guessLabels[i].backgroundColor = CheckResult.wrong.color
+                    self.emojiResults.append(CheckResult.wrong.emoji)
+                    for j in 0..<self.keyBoardBtns.count {
+                        let keyboardCharacter = self.keyBoardBtns[j].configuration?.title!
+                        if keyboardCharacter == self.guessWords[i] {
+                            self.keyBoardBtns[j].configuration?.baseBackgroundColor = CheckResult.wrong.color
+                        }
                     }
+                    print("wrong", self.emojiResults)
                 }
             }
         }
-        print(emojiResults)
+        print("end", emojiResults)
     }
     
 }
