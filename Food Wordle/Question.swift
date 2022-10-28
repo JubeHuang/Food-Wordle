@@ -62,13 +62,8 @@ struct Question {
                  "prune"
     ]
     
-    
     func newQuestion() -> String {
         let randomWord = words.randomElement()!
         return randomWord.uppercased()
-    }
-    
-    func checkAnser() {
-        
     }
 }

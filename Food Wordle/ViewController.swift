@@ -9,6 +9,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    @IBOutlet weak var explainView: UIView!
     @IBOutlet var guessLabels: [UILabel]!
     @IBOutlet weak var deleteBtn: UIButton!
     @IBOutlet weak var enterBtn: UIButton!
@@ -43,45 +44,31 @@ class ViewController: UIViewController {
         for character in newQuestion {
             questionWords.append(String(character))
         }
-        //猜的單字變guessWords array
-        for i in firstNum ... inputLabelIndex {
-            let character = guessLabels[i].text!
-            guessWords.append(character)
-            //字母分別對答案
-            if questionWords[i] == guessWords[i] {
-                //儲存emoji
-                emojiResults.append(CheckResult.correct.emoji)
-                //鍵盤背景顏色轉換
-                for j in 0..<keyBoardBtns.count {
-                    let keyboardCharacter = keyBoardBtns[j].configuration?.title!
-                    if keyboardCharacter == questionWords[i] {
-                        keyBoardBtns[j].configuration?.baseBackgroundColor = CheckResult.correct.color
-                    }
-                }
-            } else if newQuestion.contains(character) {
-                emojiResults.append(CheckResult.wrongPlace.emoji)
-            } else {
-                emojiResults.append(CheckResult.wrong.emoji)
-                for j in 0..<keyBoardBtns.count {
-                    let keyboardCharacter = keyBoardBtns[j].configuration?.title!
-                    if keyboardCharacter == guessWords[i] {
-                        keyBoardBtns[j].configuration?.baseBackgroundColor = CheckResult.wrong.color
-                    }
-                }
-            }
-        }
         flipCard(views: guessLabels, num: firstNum)
         keyboardEnable(bool: true)
-        print(emojiResults)
-//        if inputLabelIndex == 39 {
-//            //結國view
-//            print(resultEmoji(emojiArray: emojiResults))
-//        }
+        DispatchQueue.main.asyncAfter(deadline: .now()+2){
+            if self.inputLabelIndex == 39 {
+                //結國view
+                print(self.resultEmoji(emojiArray: self.emojiResults))
+            }
+        }
+        deleteBtn.isEnabled = false
     }
     @IBAction func deleteLast(_ sender: UIButton) {
+        if inputLabelIndex % 5 != 0 {
+            keyboardEnable(bool: true)
+        } else {
+            deleteBtn.isEnabled = false
+        }
         guessLabels[inputLabelIndex].text = ""
         inputLabelIndex -= 1
-        keyboardEnable(bool: true)
+    }
+    
+    @IBAction func colseExplainView(_ sender: Any) {
+        explainView.isHidden = true
+    }
+    @IBAction func explainViewOpen(_ sender: Any) {
+        explainView.isHidden = false
     }
     
     func keyboardEnable(bool:Bool) {
@@ -129,13 +116,40 @@ class ViewController: UIViewController {
             DispatchQueue.main.asyncAfter(deadline: .now()+delayTime){
                 // animation
                 UIView.transition(with: views[i], duration: 0.6, options: .transitionFlipFromTop, animations: nil, completion: nil)
+                //猜的單字變guessWords array
                 let character = views[i].text!
+                self.guessWords.append(character)
+                //字母分別對答案
                 if self.questionWords[i] == self.guessWords[i] {
+                    //字卡背景顏色變換
                     views[i].backgroundColor = CheckResult.correct.color
+                    //儲存emoji
+                    self.emojiResults.append(CheckResult.correct.emoji)
+                    //鍵盤背景顏色轉換
+                    for j in 0..<self.keyBoardBtns.count {
+                        let keyboardCharacter = self.keyBoardBtns[j].configuration?.title!
+                        if keyboardCharacter == self.questionWords[i] {
+                            self.keyBoardBtns[j].configuration?.baseBackgroundColor = CheckResult.correct.color
+                        }
+                    }
                 } else if self.newQuestion.contains(character) {
                     views[i].backgroundColor = CheckResult.wrongPlace.color
+                    self.emojiResults.append(CheckResult.wrongPlace.emoji)
+                    for j in 0..<self.keyBoardBtns.count {
+                        let keyboardCharacter = self.keyBoardBtns[j].configuration?.title!
+                        if keyboardCharacter == self.guessWords[i] {
+                            self.keyBoardBtns[j].configuration?.baseBackgroundColor = CheckResult.wrongPlace.color
+                        }
+                    }
                 } else {
                     views[i].backgroundColor = CheckResult.wrong.color
+                    self.emojiResults.append(CheckResult.wrong.emoji)
+                    for j in 0..<self.keyBoardBtns.count {
+                        let keyboardCharacter = self.keyBoardBtns[j].configuration?.title!
+                        if keyboardCharacter == self.guessWords[i] {
+                            self.keyBoardBtns[j].configuration?.baseBackgroundColor = CheckResult.wrong.color
+                        }
+                    }
                 }
             }
         }
