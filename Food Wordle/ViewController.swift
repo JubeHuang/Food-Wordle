@@ -25,6 +25,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        enterBtn.isEnabled = false
     }
     
     @IBAction func inputLetter(_ sender: UIButton) {
@@ -44,12 +45,20 @@ class ViewController: UIViewController {
         for character in newQuestion {
             questionWords.append(String(character))
         }
+        //翻卡動畫
         flipCard(views: guessLabels, num: firstNum)
         keyboardEnable(bool: true)
+        //印emoji字串
         DispatchQueue.main.asyncAfter(deadline: .now()+2){
-            if self.inputLabelIndex == 39 {
-                //結國view
-                print(self.resultEmoji(emojiArray: self.emojiResults))
+            //let resultMessage = self.resultEmoji(rowNum: self.inputLabelIndex ,emojiArray: self.emojiResults)
+            let fiveLabelsCorrect = self.guessLabels[firstNum].backgroundColor == CheckResult.correct.color && self.guessLabels[firstNum+1].backgroundColor == CheckResult.correct.color && self.guessLabels[firstNum+2].backgroundColor == CheckResult.correct.color && self.guessLabels[firstNum+3].backgroundColor == CheckResult.correct.color && self.guessLabels[self.inputLabelIndex].backgroundColor == CheckResult.correct.color
+            if fiveLabelsCorrect {
+                //結果view
+                self.alert(title: "Congrats!", message: "\n" + self.resultEmoji(rowNum: self.inputLabelIndex ,emojiArray: self.emojiResults), actionTitle: "Play Again")
+                self.updateUI()
+            } else if self.inputLabelIndex == 39 {
+                self.alert(title: "Answer is...", message: "\(self.newQuestion)\n" + self.resultEmoji(rowNum: self.inputLabelIndex ,emojiArray: self.emojiResults), actionTitle: "Play Again")
+                self.updateUI()
             }
         }
         deleteBtn.isEnabled = false
@@ -93,13 +102,18 @@ class ViewController: UIViewController {
         emojiResults = [String]()
         for i in 0..<guessLabels.count {
             guessLabels[i].text = ""
+            guessLabels[i].backgroundColor = CheckResult.normal.color
+        }
+        for j in 0..<keyBoardBtns.count {
+            keyBoardBtns[j].configuration?.baseBackgroundColor = UIColor(red: 38/255, green: 56/255, blue: 89/255, alpha: 1)
         }
         keyboardEnable(bool: true)
     }
     
-    func resultEmoji(emojiArray: Array<String>) -> String {
+    func resultEmoji(rowNum:Int, emojiArray: Array<String>) -> String {
         var emojiString = ""
-        for j in 1...8 {
+        let endRow = rowNum / 5 + 1
+        for j in 1...endRow {
             for i in 1...5 {
                 emojiString += emojiArray[j*5-(6-i)]
             }
@@ -153,6 +167,13 @@ class ViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    func alert(title:String, message:String, actionTitle:String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let actionBtn = UIAlertAction(title: actionTitle, style: .default, handler: nil)
+        alertController.addAction(actionBtn)
+        present(alertController, animated: true, completion: nil)
     }
     
 }
