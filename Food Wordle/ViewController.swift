@@ -26,6 +26,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         enterBtn.isEnabled = false
+        keyboardEnable(bool: false)
     }
     
     @IBAction func inputLetter(_ sender: UIButton) {
@@ -75,6 +76,7 @@ class ViewController: UIViewController {
     
     @IBAction func colseExplainView(_ sender: Any) {
         explainView.isHidden = true
+        keyboardEnable(bool: true)
     }
     @IBAction func explainViewOpen(_ sender: Any) {
         explainView.isHidden = false
