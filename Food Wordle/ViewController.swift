@@ -51,7 +51,6 @@ class ViewController: UIViewController {
         keyboardEnable(bool: true)
         //印emoji字串
         DispatchQueue.main.asyncAfter(deadline: .now()+2){
-            //let resultMessage = self.resultEmoji(rowNum: self.inputLabelIndex ,emojiArray: self.emojiResults)
             let fiveLabelsCorrect = self.guessLabels[firstNum].backgroundColor == CheckResult.correct.color && self.guessLabels[firstNum+1].backgroundColor == CheckResult.correct.color && self.guessLabels[firstNum+2].backgroundColor == CheckResult.correct.color && self.guessLabels[firstNum+3].backgroundColor == CheckResult.correct.color && self.guessLabels[self.inputLabelIndex].backgroundColor == CheckResult.correct.color
             if fiveLabelsCorrect {
                 //結果view
@@ -142,30 +141,15 @@ class ViewController: UIViewController {
                     //儲存emoji
                     self.emojiResults.append(CheckResult.correct.emoji)
                     //鍵盤背景顏色轉換
-                    for j in 0..<self.keyBoardBtns.count {
-                        let keyboardCharacter = self.keyBoardBtns[j].configuration?.title!
-                        if keyboardCharacter == self.questionWords[i] {
-                            self.keyBoardBtns[j].configuration?.baseBackgroundColor = CheckResult.correct.color
-                        }
-                    }
+                    self.keyBoardCheck(array: self.questionWords, index: i, color: CheckResult.correct.color)
                 } else if self.newQuestion.contains(character) {
                     views[i].backgroundColor = CheckResult.wrongPlace.color
                     self.emojiResults.append(CheckResult.wrongPlace.emoji)
-                    for j in 0..<self.keyBoardBtns.count {
-                        let keyboardCharacter = self.keyBoardBtns[j].configuration?.title!
-                        if keyboardCharacter == self.guessWords[i] {
-                            self.keyBoardBtns[j].configuration?.baseBackgroundColor = CheckResult.wrongPlace.color
-                        }
-                    }
+                    self.keyBoardCheck(array: self.self.guessWords, index: i, color: CheckResult.wrongPlace.color)
                 } else {
                     views[i].backgroundColor = CheckResult.wrong.color
                     self.emojiResults.append(CheckResult.wrong.emoji)
-                    for j in 0..<self.keyBoardBtns.count {
-                        let keyboardCharacter = self.keyBoardBtns[j].configuration?.title!
-                        if keyboardCharacter == self.guessWords[i] {
-                            self.keyBoardBtns[j].configuration?.baseBackgroundColor = CheckResult.wrong.color
-                        }
-                    }
+                    self.keyBoardCheck(array: self.self.guessWords, index: i, color: CheckResult.wrong.color)
                 }
             }
         }
@@ -178,5 +162,13 @@ class ViewController: UIViewController {
         present(alertController, animated: true, completion: nil)
     }
     
+    func keyBoardCheck(array: Array<String>,index: Int, color: UIColor) {
+        for j in 0..<keyBoardBtns.count {
+            let keyboardCharacter = keyBoardBtns[j].configuration?.title!
+            if keyboardCharacter == array[index] {
+                keyBoardBtns[j].configuration?.baseBackgroundColor = color
+            }
+        }
+    }
 }
 
